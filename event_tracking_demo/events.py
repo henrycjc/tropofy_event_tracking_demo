@@ -188,31 +188,30 @@ class ExampleBarChart(Chart):
 
     def get_table_schema(self, app_session):
         return {
-            "year": ("string", "Year"),
-            "sales": ("number", "Sales"),
-            "expenses": ("number", "Expenses")
+            "hour": ("string", "hour"),
+            "orders": ("number", "Orders"),
         }
 
     def get_table_data(self, app_session):
-        return [
-            {"year": 2004, "sales": 1000, "expenses": 400},
-            {"year": 2005, "sales": 1170, "expenses": 460},
-            {"year": 2006, "sales": 660, "expenses": 1120},
-            {"year": 2007, "sales": 1030, "expenses": 540}
-        ]
+        pop_by_time = [{'hour': x, 'orders': 0} for x in xrange(6, 19)]
+        for oitem in app_session.data_set.query(Order).all():
+            for t in pop_by_time:
+                if t['hour'] == int(oitem.timestamp.strftime('%H')):
+                    t['orders'] += 1
+        return pop_by_time
 
     def get_column_ordering(self, app_session):
-        return ["year", "sales", "expenses"]
+        return ["hour", "orders"]
 
     def get_order_by_column(self, app_session):
         return "year"
 
     def get_chart_options(self, app_session):
         return {
-            'title': 'Company Performance',
+            'title': 'Busiest Times Per Day',
             'vAxis': {
-                'title': 'Year',
-                'titleTextStyle': {'color': 'red'}
+                'title': 'Hour (24hr)',
+                'titleTextStyle': {'color': 'black'}
             }
         }
 
