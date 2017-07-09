@@ -57,6 +57,21 @@ class Order(DataSetMixin):
         self.age = age
         self.postcode = postcode
 
+    @classmethod
+    def get_total_by_food(cls):
+        popularity = {}
+        return cls.query(func.sum(Order.quantity)).group_by(cls.food).all()
+
+    @property
+    def serialise(self):
+        return {
+            'food': self.food,
+            'timestamp': self.timestamp,
+            'quantity': self.quantity,
+            'age': self.age,
+            'postcode': self.postcode
+        }
+
 
 class Staff(DataSetMixin):
     staff_name = Column(Text, unique=True)  # This is just because its a demo, obviously not a real PK candidate
@@ -93,7 +108,6 @@ class EventTrackingDemoApp(AppWithDataSets):
     def get_examples(self):
         return {
             "Demo Dummy Data (D^3)": load_example_data,
-            "Demo Dummy Dat2": load_example_data
         }
 
     def get_gui(self):
@@ -118,7 +132,8 @@ class EventTrackingDemoApp(AppWithDataSets):
                     Step(
                         name='Overview',
                         widgets=[SimpleGrid(Order),
-                                 ExampleTimelineWidget()]
+                                 ExampleTimelineWidget(),
+                                 ExampleBarChart()]
                     )
                 ]
             )
@@ -142,18 +157,18 @@ class FoodPopularityChart(Chart):
         return "food_name"
 
     def get_table_data(self, app_session):
+        food_popularity = []
+        print 'a'
+        foods = app_session.data_set.query(Food.title).distinct()
+        print foods
+        for food in foods:
+            food_popularity.append({'food_name': food[0], 'quantity': 0})
 
-        #food_popularity = {}
-        orders = app_session.data_set.query(Order).all()
-        for o in orders:
-            print orders
-       # for o in orders:
-        #    food_popularity[o.food] += o.quantity
-
-        return [
-            {"food_name": "test", "quantity": 5},
-            {"food_name": "another", "quantity": 10}
-        ]
+        for oitem in app_session.data_set.query(Order).all():
+            for food in food_popularity:
+                if food['food_name'] == oitem.food:
+                    food['quantity'] += oitem.quantity
+        return food_popularity
 
     def get_chart_options(self, app_session):
         return {'title': 'Most Popular Meals',
@@ -165,6 +180,41 @@ class FoodPopularityChart(Chart):
                     {'color': '#E9B872'},
                     {'color': '#90A959'},
                     {'color': '#6494AA'}]}
+
+
+class ExampleBarChart(Chart):
+    def get_chart_type(self, app_session):
+        return Chart.BARCHART
+
+    def get_table_schema(self, app_session):
+        return {
+            "year": ("string", "Year"),
+            "sales": ("number", "Sales"),
+            "expenses": ("number", "Expenses")
+        }
+
+    def get_table_data(self, app_session):
+        return [
+            {"year": 2004, "sales": 1000, "expenses": 400},
+            {"year": 2005, "sales": 1170, "expenses": 460},
+            {"year": 2006, "sales": 660, "expenses": 1120},
+            {"year": 2007, "sales": 1030, "expenses": 540}
+        ]
+
+    def get_column_ordering(self, app_session):
+        return ["year", "sales", "expenses"]
+
+    def get_order_by_column(self, app_session):
+        return "year"
+
+    def get_chart_options(self, app_session):
+        return {
+            'title': 'Company Performance',
+            'vAxis': {
+                'title': 'Year',
+                'titleTextStyle': {'color': 'red'}
+            }
+        }
 
 
 class ExampleTimelineWidget(TimelineWidget):
