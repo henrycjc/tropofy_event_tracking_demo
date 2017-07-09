@@ -5,12 +5,12 @@ This project requires a Tropofy API key. Visit https://tropofy.com/index.html#pr
 
 ## Quick start
 
-`$ git clone git@github.com:henrycjc/tropofy_event_tracking_demo.git && cd tropofy_event_tracking_demo`
-`$ virutalenv env && source env/bin/activate`
-`$ cp settings.example.json settings.json`
-`$ vim settings.json` _(add your API keys in the appropriate places)_
-`$ python setup.py develop`
-`$ python run.py` _(this will serve the app on localhost:8080)_
+* `$ git clone git@github.com:henrycjc/tropofy_event_tracking_demo.git && cd tropofy_event_tracking_demo`
+* `$ virutalenv env && source env/bin/activate`
+* `$ cp settings.example.json settings.json`
+* `$ vim settings.json` _(add your API keys in the appropriate places)_
+* `$ python setup.py develop`
+* `$ python run.py` _(this will serve the app on localhost:8080)_
 
 
 ## Dependencies
