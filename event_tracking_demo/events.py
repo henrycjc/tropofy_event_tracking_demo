@@ -135,7 +135,7 @@ class EventTrackingDemoApp(AppWithDataSets):
                     Step(
                         name='Overview',
                         widgets=[SimpleGrid(Order),
-                                 ExampleTimelineWidget(),
+                                # ExampleTimelineWidget(), TODO: Perhaps process the best time to roster staff based on popular times?
                                  FoodPopByHourChart()]
                     )
                 ]
