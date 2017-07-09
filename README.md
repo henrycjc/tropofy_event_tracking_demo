@@ -1,5 +1,5 @@
 # tropofy_event_tracking_demo
-A simple attraction/ride popularity tracking system for a school fete/fair type event (demo) using the Tropofy platform.
+A simple food stall tracking system for a school fete/fair type event (demo) using the Tropofy platform.
 
 This project requires a Tropofy API key. Visit https://tropofy.com/index.html#pricing for more info. 
 
