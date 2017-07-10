@@ -161,9 +161,7 @@ class FoodPopularityChart(Chart):
 
     def get_table_data(self, app_session):
         food_popularity = []
-        print 'a'
         foods = app_session.data_set.query(Food.title).distinct()
-        print foods
         for food in foods:
             food_popularity.append({'food_name': food[0], 'quantity': 0})
 
